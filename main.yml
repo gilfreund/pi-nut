@@ -1,0 +1,28 @@
+---
+- name: Set up NUT Server on main Pi.
+  hosts: primary
+  become: true
+  gather_facts: true
+  tags: primary
+
+  vars_files:
+    - config.yml
+
+  roles:
+    - geerlingguy.security
+
+  tasks:
+    - meta: noop
+
+- name: Set up NUT Client on servers.
+  hosts: clients
+  become: true
+  gather_facts: true
+  tags: client
+
+  vars_files:
+    - config.yml
+    - config-secrets.yml
+
+  roles:
+    - geerlingguy.nut_client

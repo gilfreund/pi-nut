@@ -1,0 +1,5 @@
+---
+nut_client_ups: server-room-rack
+nut_client_server: 10.0.1.10
+nut_client_username: observer
+# nut_client_password: SEE_CONFIG-SECRETS.YML

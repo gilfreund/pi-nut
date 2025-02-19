@@ -6,13 +6,13 @@ Raspberry Pi NUT ([Network UPS Tools](https://networkupstools.org)) configuratio
 
 TODO.
 
-## NUT Server Installation
+## Software Setup
 
-TODO.
+TODO:
 
-## NUT Client Installation
-
-TODO.
+```
+ansible-playbook main.yml
+```
 
 ## License
 
