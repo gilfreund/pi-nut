@@ -39,9 +39,9 @@ ansible-playbook main.yml
 
 > **NOTE**: This playbook uses an Ansible Vault-encrypted secret inside `config-secrets.yml` for the `nut_client_password` variable. The `ansible.cfg` file defines the path to my `vault_password_file`—but if you have that on _your_ machine... I'm a little worried! You can either modify the playbook to remove the use of an encrypted secrets file, or you can use `ansible-vault encrypt` to encrypt your own secrets file with the client password inside and use _that_.
 
-## Debugging
+## Monitoring and Debugging
 
-After NUT is installed, you can run `upsc` to verify the UPS is being seen correctly:
+Run `upsc` to verify the UPS is being seen correctly:
 
 ```
 $ upsc server-room-rack
@@ -84,6 +84,23 @@ To perform a full test of NUT's shutdown without unplugging your UPS and drainin
 ```
 upsmon -c fsd
 ```
+
+Finally, there are a number of open source web UIs you can run to see a full status dashboard for your UPSes. I personally use [Home Assistant's NUT Integration](https://www.home-assistant.io/integrations/nut/) to display my UPS info on my Home Assistant power monitoring dashboard.
+
+But if you don't have Home Assistant, the easiest Web UI to get started with is [nut_webgui](https://github.com/SuperioOne/nut_webgui). If you have Docker installed on your computer (this web UI doesn't _have_ to run on the NUT server), you can launch it with:
+
+```
+docker run \
+  -e UPSD_ADDR=10.0.2.10 \
+  -e UPSD_USER=observer \
+  -e UPSD_PASS=PASSWORD_HERE \
+  -p 9000:9000 \
+  ghcr.io/superioone/nut_webgui:latest
+```
+
+Then visit `http://localhost:9000/` in your browser:
+
+<p align="center"><img alt="NUT Web Monitor running in Docker" src="/resources/nut-web-monitor-docker.png" height="auto" width="600"></p>
 
 ## License
 
