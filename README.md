@@ -19,6 +19,11 @@ Anyway, here's my hardware setup:
   - [3D printed Raspberry Pi Rackmount - right hand mount](https://www.printables.com/model/843677-raspberry-pi-5-rack-mount-right-sided) (I printed in ASA)
   - USB-C power supply, USB-A to USB-B cable for UPS, and Ethernet connected to my switch
 
+## Known issues
+
+  - This project is currently only configured for one computer (a Raspberry Pi) monitoring one UPS.
+  - The NUT client configuration is only tested on Ubuntu and Debian Linux currently. Other Linux distributions may require changes.
+
 ## Software Setup
 
 This project uses Ansible (`pip install ansible`).
@@ -31,13 +36,23 @@ ansible-galaxy install geerlingguy.nut_client
 
 All the servers to be managed by this playbook are listed inside `hosts.yml`. There should be one `primary` server, and then multiple `clients` which will subscribe to the primary NUT server for UPS status.
 
-To set up NUT on all configured hosts, run:
+### Ansible Vault
+
+This playbook uses Ansible Vault-encrypted secrets inside `config-secrets.yml` for the `nut_upsd_users` and `nut_client_password` variables.
+
+The `ansible.cfg` file defines the path to my `vault_password_file`—but if you have that on _your_ machine... I'm a little worried!
+
+You can delete my `config-secrets.yml` file and create your own with the variables you'd like to encrypt, then use `ansible-vault encrypt` to encrypt your version of the file.
+
+I may rework the way the variable files are stored in this repository to make it easier for people to maintain their own forks, but right now it is the way it is :)
+
+### Run the Ansible Playbook
+
+To set up NUT on all configured hosts, make sure all the variables are configured correctly inside `config.yml` and `config-secrets.yml`, then run:
 
 ```
 ansible-playbook main.yml
 ```
-
-> **NOTE**: This playbook uses an Ansible Vault-encrypted secret inside `config-secrets.yml` for the `nut_client_password` variable. The `ansible.cfg` file defines the path to my `vault_password_file`—but if you have that on _your_ machine... I'm a little worried! You can either modify the playbook to remove the use of an encrypted secrets file, or you can use `ansible-vault encrypt` to encrypt your own secrets file with the client password inside and use _that_.
 
 ## Monitoring and Debugging
 
