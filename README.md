@@ -8,7 +8,7 @@ Raspberry Pi NUT ([Network UPS Tools](https://networkupstools.org)) configuratio
 
 Because UPSes generally have a single USB or serial port, and the Ethernet port (if your UPS has one) either requires a subscription to activate, or runs wildly outdated software (so it would be a risk to connect it to your network), NUT is useful in allowing a single computer (in my case, a Raspberry Pi) to share the UPS status information with other servers powered by it.
 
-This playbook assumes you're running a Raspberry Pi like I am, connected directly to your NAS via USB, but you could run any computer with Debian or Ubuntu, including a little mini PC or some other SBC.
+This playbook assumes you're running a Raspberry Pi like I am, connected directly to your UPS via USB, but you could run any computer with Debian or Ubuntu, including a little mini PC or some other SBC.
 
 It's useful to run NUT on a low-power computer though, as it will be the last system to power down, and if it's a server burning 500W at idle, your UPS will likely be on its last legs as your NUT server shuts down!
 
