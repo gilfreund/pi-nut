@@ -10,6 +10,7 @@ nut_ups_port: auto
 nut_ups_vendorid: '0665'
 nut_ups_productid: '5161'
 nut_ups_bus: '001'
+nut_shutdown_finaldelay: '180'
 
 nut_ups_admin_user: admin
 

@@ -70,12 +70,17 @@
     - name: Configure UPS Monitor.
       lineinfile:
         path: /etc/nut/upsmon.conf
-        regexp: '^MONITOR.+'
-        line: "MONITOR {{ nut_ups_name }}@localhost 1 {{ nut_ups_admin_user }} {{ nut_ups_admin_password }} primary"
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
         insertafter: EOF
         state: present
         mode: 0640
       notify: restart nut-monitor
+      with_items:
+        - regexp: '^MONITOR.+'
+          line: "MONITOR {{ nut_ups_name }}@localhost 1 {{ nut_ups_admin_user }} {{ nut_ups_admin_password }} primary"
+        - regexp: '^FINALDELAY.+'
+          line: "FINALDELAY {{ nut_shutdown_finaldelay }}"
 
     - name: Configure NUT mode.
       lineinfile:
