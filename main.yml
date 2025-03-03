@@ -51,12 +51,17 @@
     - name: Change UPSD configuration.
       lineinfile:
         path: /etc/nut/upsd.conf
-        regexp: '^LISTEN.+'
-        line: "LISTEN 0.0.0.0 3493"
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
         insertafter: EOF
         state: present
         mode: 0640
       notify: restart nut-server
+      with_items:
+        - regexp: '^LISTEN 127.+'
+          line: "LISTEN 127.0.0.1 3493"
+        - regexp: '^LISTEN 0.+'
+          line: "LISTEN 0.0.0.0 3493"
 
     - name: Configure UPSD users.
       blockinfile:
