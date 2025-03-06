@@ -9,73 +9,73 @@
     - config.yml
     - config-secrets.yml
 
-  roles:
-    - geerlingguy.security
+  # roles:
+  #   - geerlingguy.security
 
   handlers:
-    - name: restart nut-server
-      service:
+    - name: Restart nut-server
+      ansible.builtin.service:
         name: nut-server
         state: restarted
       when: not ansible_check_mode
 
-    - name: restart nut-monitor
-      service:
+    - name: Restart nut-monitor
+      ansible.builtin.service:
         name: nut-monitor
         state: restarted
       when: not ansible_check_mode
 
   tasks:
     - name: Ensure NUT is installed.
-      package:
+      ansible.builtin.package:
         name: nut
         state: present
 
     - name: Change NUT UPS configuration.
-      blockinfile:
+      ansible.builtin.blockinfile:
         path: /etc/nut/ups.conf
         marker: "# {mark} ANSIBLE MANAGED BLOCK"
         block: |
           [{{ nut_ups_name }}]
               driver = {{ nut_ups_driver }}
-              product = UPS
+              product = "Back-UPS BX2200MI"
               desc = "{{ nut_ups_description }}"
               port = {{ nut_ups_port }}
               vendorid = {{ nut_ups_vendorid }}
               productid = {{ nut_ups_productid }}
               bus = {{ nut_ups_bus }}
         state: present
-        mode: 0640
-      notify: restart nut-server
+        mode: "0640"
+      notify: Restart nut-server
 
     - name: Change UPSD configuration.
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/nut/upsd.conf
         regexp: '^LISTEN 0.+'
         line: "LISTEN 0.0.0.0 3493"
         insertafter: EOF
         state: present
-        mode: 0640
-      notify: restart nut-server
+        mode: "0640"
+      notify: Restart nut-server
 
     - name: Configure UPSD users.
-      blockinfile:
+      ansible.builtin.blockinfile:
         path: /etc/nut/upsd.users
         marker: "# {mark} ANSIBLE MANAGED BLOCK"
         block: "{{ nut_upsd_users }}"
         state: present
-        mode: 0640
-      notify: restart nut-server
+        mode: "0640"
+      notify: Restart nut-server
 
     - name: Configure UPS Monitor.
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/nut/upsmon.conf
         regexp: "{{ item.regexp }}"
         line: "{{ item.line }}"
         insertafter: EOF
         state: present
-        mode: 0640
-      notify: restart nut-monitor
+        mode: "0640"
+      notify: Restart nut-monitor
       with_items:
         - regexp: '^MONITOR.+'
           line: "MONITOR {{ nut_ups_name }}@localhost 1 {{ nut_ups_admin_user }} {{ nut_ups_admin_password }} primary"
@@ -83,16 +83,16 @@
           line: "FINALDELAY {{ nut_shutdown_finaldelay }}"
 
     - name: Configure NUT mode.
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/nut/nut.conf
         regexp: '^MODE.+'
         line: "MODE=netserver"
         state: present
-        mode: 0640
-      notify: restart nut-server
+        mode: "0640"
+      notify: Restart nut-server
 
     - name: Ensure NUT is running (if configured).
-      service:
+      ansible.builtin.service:
         name: "{{ item }}"
         state: "{{ nut_state }}"
         enabled: "{{ nut_enabled }}"
@@ -103,7 +103,7 @@
 
 - name: Set up NUT Client on other servers.
   hosts: clients
-  become: true
+  # become: true
   gather_facts: true
   tags: client
 
