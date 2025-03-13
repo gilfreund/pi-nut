@@ -28,8 +28,12 @@ nut_upsd_users: |
       password = OBSERVER_PASSWORD_HERE
       upsmon secondary
 
-nut_client_ups: server-room-rack
-nut_client_server: 10.0.2.10
+  [monuser]
+      password = secret
+      upsmon secondary
+
+nut_client_ups: ups
+nut_client_server: 172.16.10.127
 nut_client_username: observer
 
 # See config-secrets.yml
